@@ -33,7 +33,9 @@ TfLiteTensor* input = nullptr;
 TfLiteTensor* output = nullptr;
 int inference_count = 0;
 
-constexpr int kTensorArenaSize = 2000;
+// make large arena to guarantee model fit into memory
+// for now I don't care about size, my goal is to run model somehow
+constexpr int kTensorArenaSize = 1024*1024*50;
 uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
