@@ -41,6 +41,7 @@ TfLiteStatus AverageEval(TfLiteContext* context, TfLiteNode* node) {
     case kTfLiteFloat32:
       AveragePoolingEvalFloat(context, node, params, data, input, output);
       break;
+    case kTfLiteUInt8:
     case kTfLiteInt8:
       AveragePoolingEvalQuantized(context, node, params, data, input, output);
       break;
@@ -70,6 +71,7 @@ TfLiteStatus MaxEval(TfLiteContext* context, TfLiteNode* node) {
       MaxPoolingEvalFloat(context, node, params, data, input, output);
       break;
     case kTfLiteInt8:
+    case kTfLiteUInt8:
       MaxPoolingEvalQuantized(context, node, params, data, input, output);
       break;
     default:

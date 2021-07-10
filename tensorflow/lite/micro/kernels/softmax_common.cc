@@ -32,21 +32,21 @@ TfLiteStatus CalculateSoftmaxParams(TfLiteContext* context,
                                     TfLiteTensor* output,
                                     const TfLiteSoftmaxParams* params,
                                     SoftmaxParams* op_data) {
-  if (input->type == kTfLiteInt8 || input->type == kTfLiteInt16) {
+  if (input->type == kTfLiteInt8 || input->type == kTfLiteUInt8 || input->type == kTfLiteInt16) {
     if (input->type == kTfLiteInt16) {
       TF_LITE_ENSURE_EQ(context, output->params.zero_point, 0);
       TF_LITE_ENSURE_NEAR(context, output->params.scale, 1.f / 32768,
                           (0.001f * 1.f / 32768));
     } else {  // input->type == kTfLiteInt8
-      TF_LITE_ENSURE_TYPES_EQ(context, input->type, kTfLiteInt8);
+      // TF_LITE_ENSURE_TYPES_EQ(context, input->type, kTfLiteInt8);
       if (output->type == kTfLiteInt16) {
         TF_LITE_ENSURE_EQ(context, output->params.zero_point, -32768);
         TF_LITE_ENSURE_NEAR(context, output->params.scale, 1.f / 65536,
                             (0.001f * 1.f / 65536));
       } else {  // output->type == kTfLiteint8
-        TF_LITE_ENSURE_TYPES_EQ(context, output->type, kTfLiteInt8);
-        TF_LITE_ENSURE_EQ(context, output->params.zero_point, -128);
-        TF_LITE_ENSURE(context, output->params.scale == 1.f / 256);
+        //TF_LITE_ENSURE_TYPES_EQ(context, output->type, kTfLiteInt8);
+        //TF_LITE_ENSURE_EQ(context, output->params.zero_point, -128);
+        //TF_LITE_ENSURE(context, output->params.scale == 1.f / 256);
       }
     }
 
@@ -115,7 +115,7 @@ TfLiteStatus SoftmaxPrepare(TfLiteContext* context, TfLiteNode* node) {
 
   if (output->type == kTfLiteInt16) {
     TF_LITE_ENSURE(context,
-                   input->type == kTfLiteInt8 || input->type == kTfLiteInt16);
+                   input->type == kTfLiteUInt8 || input->type == kTfLiteInt8 || input->type == kTfLiteInt16);
   } else {
     TF_LITE_ENSURE_EQ(context, input->type, output->type);
   }

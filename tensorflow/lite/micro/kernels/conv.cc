@@ -99,6 +99,18 @@ TfLiteStatus Eval(TfLiteContext* context, TfLiteNode* node) {
           tflite::micro::GetTensorData<int8_t>(output));
       break;
     }
+    case kTfLiteUInt8: {
+      TfLiteTensor* im2col = nullptr;
+
+      reference_ops::Conv(
+          ConvParamsQuantized(params, data), tflite::micro::GetTensorShape(input), tflite::micro::GetTensorData<uint8_t>(input),
+          tflite::micro::GetTensorShape(filter), tflite::micro::GetTensorData<uint8_t>(filter),
+          tflite::micro::GetTensorShape(bias), tflite::micro::GetTensorData<int32_t>(bias),
+          tflite::micro::GetTensorShape(output), tflite::micro::GetTensorData<uint8_t>(output),
+          GetTensorShape(im2col), GetTensorData<uint8_t>(im2col),
+          /* cpu_backend_context = */ nullptr);
+      break;
+    }
     default:
       TF_LITE_KERNEL_LOG(context, "Type %s (%d) not supported.",
                          TfLiteTypeGetName(input->type), input->type);
