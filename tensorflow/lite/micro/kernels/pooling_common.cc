@@ -100,23 +100,47 @@ void AveragePoolingEvalQuantized(TfLiteContext* context, const TfLiteNode* node,
                                  const OpDataPooling* data,
                                  const TfLiteEvalTensor* input,
                                  TfLiteEvalTensor* output) {
-  TFLITE_DCHECK(input->type == kTfLiteInt8);
+  if (input->type == kTfLiteInt8)
+  {
+    TFLITE_DCHECK(input->type == kTfLiteInt8);
 
-  PoolParams op_params;
-  op_params.stride_height = params->stride_height;
-  op_params.stride_width = params->stride_width;
-  op_params.filter_height = params->filter_height;
-  op_params.filter_width = params->filter_width;
-  op_params.padding_values.height = data->padding.height;
-  op_params.padding_values.width = data->padding.width;
-  op_params.quantized_activation_min = data->activation_min;
-  op_params.quantized_activation_max = data->activation_max;
+    PoolParams op_params;
+    op_params.stride_height = params->stride_height;
+    op_params.stride_width = params->stride_width;
+    op_params.filter_height = params->filter_height;
+    op_params.filter_width = params->filter_width;
+    op_params.padding_values.height = data->padding.height;
+    op_params.padding_values.width = data->padding.width;
+    op_params.quantized_activation_min = data->activation_min;
+    op_params.quantized_activation_max = data->activation_max;
 
-  reference_integer_ops::AveragePool(
-      op_params, tflite::micro::GetTensorShape(input),
-      tflite::micro::GetTensorData<int8_t>(input),
-      tflite::micro::GetTensorShape(output),
-      tflite::micro::GetTensorData<int8_t>(output));
+    reference_integer_ops::AveragePool(
+        op_params, tflite::micro::GetTensorShape(input),
+        tflite::micro::GetTensorData<int8_t>(input),
+        tflite::micro::GetTensorShape(output),
+        tflite::micro::GetTensorData<int8_t>(output));
+  }
+  else if (input->type == kTfLiteUInt8)
+  {
+    PoolParams op_params;
+    op_params.stride_height = params->stride_height;
+    op_params.stride_width = params->stride_width;
+    op_params.filter_height = params->filter_height;
+    op_params.filter_width = params->filter_width;
+    op_params.padding_values.height = data->padding.height;
+    op_params.padding_values.width = data->padding.width;
+    op_params.quantized_activation_min = data->activation_min;
+    op_params.quantized_activation_max = data->activation_max;
+
+    reference_ops::AveragePool(
+        op_params, tflite::micro::GetTensorShape(input),
+        tflite::micro::GetTensorData<uint8_t>(input),
+        tflite::micro::GetTensorShape(output),
+        tflite::micro::GetTensorData<uint8_t>(output));
+  }
+  else {
+    assert(false && "unexpected type");
+  }
 }
 
 void MaxPoolingEvalFloat(TfLiteContext* context, TfLiteNode* node,
