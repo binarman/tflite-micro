@@ -102,8 +102,7 @@ void loop() {
   // Run inference, and report any error
   TfLiteStatus invoke_status = interpreter->Invoke();
   if (invoke_status != kTfLiteOk) {
-    TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed on x: %f\n",
-                         static_cast<double>(x));
+    TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed");
     return;
   }
 
