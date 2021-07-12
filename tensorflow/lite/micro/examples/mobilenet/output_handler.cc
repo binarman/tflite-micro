@@ -14,11 +14,12 @@ limitations under the License.
 ==============================================================================*/
 
 #include "tensorflow/lite/micro/examples/mobilenet/output_handler.h"
+#include <iostream>
 
 void HandleOutput(tflite::ErrorReporter* error_reporter, int best_label,
                   float max_value) {
-  // Log the current X and Y values
-  TF_LITE_REPORT_ERROR(error_reporter, "label: %d, value: %f\n",
-                       static_cast<double>(best_label),
-                       static_cast<double>(max_value));
+//  TF_LITE_REPORT_ERROR(error_reporter, "label: %d, value: %f\n",
+//                       best_label,
+//                       static_cast<double>(max_value));
+  std::cout << "label: " << best_label << " value: " << max_value << "\n";
 }
