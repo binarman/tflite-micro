@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
   int w = 128;
   int h = 128;
   int c = 3;
-  img.norm().resize(w, h);
+  img.resize(w, h);
 
   float image_data[w * h * c];
   for (int i = 0; i < h; ++i)
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
       for (int k = 0; k < c; ++k)
         {
           const float val = img(j, i, k);
-          image_data[i * w * c + j *c + k] = val / 128.0f - 1.0f;
+          image_data[i * w * c + j * c + k] = val / 128.0f - 1.0f;
         }
 
   setup();
