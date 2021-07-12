@@ -69,6 +69,7 @@ cc_binary(
         "main.cc",
         "main_functions.cc",
         "main_functions.h",
+        "CImg.h",
     ],
     copts = [
         "-Werror",

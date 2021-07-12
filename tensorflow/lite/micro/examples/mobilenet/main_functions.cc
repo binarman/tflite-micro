@@ -84,6 +84,8 @@ void setup() {
   inference_count = 0;
 }
 
+float *input_data;
+
 // The name of this function is important for Arduino compatibility.
 void loop() {
   // Calculate an x value to feed into the model. We compare the current
@@ -92,12 +94,10 @@ void loop() {
   // trained on, and use this to calculate a value.
   float position = static_cast<float>(inference_count) /
                    static_cast<float>(kInferencesPerCycle);
-  float x = position * kXrange;
 
-  // Quantize the input from floating-point to integer
-  int8_t x_quantized = x / input->params.scale + input->params.zero_point;
   // Place the quantized input in the model's input tensor
-  input->data.int8[0] = x_quantized;
+  for (int i = 0; i < 128 * 128 * 3; ++i)
+    input->data.uint8[i] = input_data[i] / input->params.scale + input->params.zero_point;
 
   // Run inference, and report any error
   TfLiteStatus invoke_status = interpreter->Invoke();
@@ -108,13 +108,20 @@ void loop() {
   }
 
   // Obtain the quantized output from model's output tensor
-  int8_t y_quantized = output->data.int8[0];
-  // Dequantize the output from integer to floating-point
-  float y = (y_quantized - output->params.zero_point) * output->params.scale;
-
+  int best = 0;
+  float max = 0;
+  for (int i = 0; i < 1001; ++i)
+  {
+    float y = (output->data.uint8[i] - output->params.zero_point) * output->params.scale;
+    if (y > best)
+    {
+      best = i;
+      max = y;
+    }
+  }
   // Output the results. A custom HandleOutput function can be implemented
   // for each supported hardware target.
-  HandleOutput(error_reporter, x, y);
+  HandleOutput(error_reporter, best, max);
 
   // Increment the inference_counter, and reset it if we have reached
   // the total number per cycle

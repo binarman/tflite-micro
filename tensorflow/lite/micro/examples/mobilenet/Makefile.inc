@@ -26,7 +26,8 @@ MOBILENET_HDRS := \
 tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/model.h \
 tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/output_handler.h \
 tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/constants.h \
-tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/main_functions.h
+tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/main_functions.h \
+tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/CImg.h
 
 #Find any platform - specific rules for this example.
 include $(wildcard tensorflow/lite/micro/examples/$(EXAMPLE_NAME)/*/Makefile.inc)
