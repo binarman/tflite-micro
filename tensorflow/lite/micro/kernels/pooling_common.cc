@@ -69,7 +69,12 @@ TfLiteStatus PoolingPrepare(TfLiteContext* context, TfLiteNode* node) {
     CalculateActivationRangeQuantized(context, params->activation, output,
                                       &data->activation_min,
                                       &data->activation_max);
+  } else if (input->type == kTfLiteUInt8) {
+    CalculateActivationRangeQuantized(context, params->activation, output,
+                                      &data->activation_min,
+                                      &data->activation_max);
   }
+
 
   return kTfLiteOk;
 }
