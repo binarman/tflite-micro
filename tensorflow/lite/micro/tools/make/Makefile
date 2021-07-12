@@ -142,15 +142,14 @@ CC_WARNINGS := \
   -Wno-unused-parameter
 
 COMMON_FLAGS := \
-  -Werror \
   -fno-unwind-tables \
   -ffunction-sections \
   -fdata-sections \
   -fmessage-length=0 \
-  -DTF_LITE_STATIC_MEMORY \
   -DTF_LITE_DISABLE_X86_NEON \
   $(CC_WARNINGS) \
   $(ADDITIONAL_DEFINES)
+#  -DTF_LITE_STATIC_MEMORY \
 
 ifeq ($(TARGET), $(HOST_OS))
   # If we are not doing a cross-compilation then -DTF_LITE_USE_CTIME is what we
@@ -161,7 +160,6 @@ endif
 CXXFLAGS := \
   -std=c++11 \
   -fno-rtti \
-  -fno-exceptions \
   -fno-threadsafe-statics \
   $(COMMON_FLAGS)
 
@@ -178,7 +176,9 @@ ifeq ($(TOOLCHAIN), gcc)
     # that are unsupported with LLVM.
     LDFLAGS += \
       -Wl,--fatal-warnings \
-      -Wl,--gc-sections
+      -Wl,--gc-sections \
+      -lX11 \
+      -lpthread
   endif
 endif
 
